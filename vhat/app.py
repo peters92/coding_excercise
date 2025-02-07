@@ -1,10 +1,13 @@
 import numpy as np
 import pandas as pd
 from fastapi import FastAPI
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, constr
 from typing import Annotated
+from openai import OpenAI
+from vhat.api_keys import open_ai_key
 
 app = FastAPI()
+open_ai_client = OpenAI(api_key=open_ai_key)
 
 # Type definitions
 longitude = Annotated[float, Field(ge=-180.0, le=180.0)]
@@ -16,10 +19,24 @@ class Coordinates(BaseModel):
     x2: list[longitude]
     y2: list[latitude]
 
+class UserMessage(BaseModel):
+    msg: str = constr(max_length=120)
+
 # Routes
 @app.get("/")
 def root():
     return {"Hello": "Alexander"}
+
+@app.post("/chatbot")
+async def chatbot_text_response(user_message: UserMessage):
+    
+    completion = open_ai_client.chat.completions.create(
+        model="gpt-4o-mini",
+        store=True,
+        messages=[{"role": "user", "content": user_message.msg}],
+    )
+    return {"response": completion.choices[0].message.content}
+
 
 @app.post("/haversine")
 async def haversine_distance(coordinates: Coordinates):
