@@ -2,7 +2,7 @@
 name = "vhat"
 version = "0.1.0"
 description = ""
-authors = ["Peter S. <semsag.peter@gmail.com>"]
+authors = ["Peter S. <24956712+peters92@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
