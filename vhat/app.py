@@ -22,7 +22,7 @@ def root():
     return {"Hello": "Alexander"}
 
 @app.post("/haversine")
-def haversine_distance(coordinates: Coordinates):
+async def haversine_distance(coordinates: Coordinates):
     """
     This endpoint calculates the distance between pairs of coordinates in kilometers
     Request body should contain a json in the form of:
